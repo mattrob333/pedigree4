@@ -54,3 +54,19 @@
 - The key product invariant is that every AI agent must have a verifiable active human parent or be explicitly marked orphaned/exceptional with audit evidence.
 - The existing visual demo should be preserved while implementation moves incrementally into typed React components.
 - The backend currently prioritizes a clear demo slice and contract alignment over database persistence.
+
+## 2026-04-27 CI Handoff Update
+
+### Built
+
+- Added GitHub Actions CI at `.github/workflows/ci.yml`.
+- Added backend CI checks for structure validation, Ruff lint, and pytest smoke tests.
+- Added frontend CI checks for npm install, TypeScript typecheck, and Vite production build.
+- Added Docker Compose config validation for the local demo stack.
+- Documented the CI validation coverage in `README.md`.
+
+### Developer TODOs Added
+
+- Extend CI with Docker image builds once the demo stack is ready for full container build verification.
+- Add integration tests for frontend-to-backend workflows.
+- Add coverage reporting when the backend test suite grows beyond smoke tests.

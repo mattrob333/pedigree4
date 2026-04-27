@@ -47,6 +47,14 @@ npm run dev:web
 pytest tests/unit
 ```
 
+### CI validation
+
+GitHub Actions runs the same baseline validation on pushes and pull requests to `main`:
+
+- Backend structure validation, Ruff lint, and pytest smoke tests.
+- Frontend npm install, TypeScript typecheck, and Vite production build.
+- Docker Compose configuration validation for the full demo stack.
+
 ## Repository Structure
 
 ```text
