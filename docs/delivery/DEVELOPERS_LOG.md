@@ -78,3 +78,4 @@
 - Added `CONTRIBUTING.md` with local validation commands, development priorities, architecture boundaries, and pull request expectations.
 - Added GitHub issue templates for backend tasks, frontend tasks, and docs/handoff tasks.
 - Clarified acceptance criteria and validation commands for follow-on AI agents and reviewers.
+- Added `docs/delivery/IMPLEMENTATION_BACKLOG.md` with prioritized workstreams for frontend expansion, backend persistence, policy/runtime evaluation, Microsoft connector depth, demo scale, security, and developer experience.

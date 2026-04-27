@@ -113,6 +113,7 @@ Every AI agent must have a verifiable active human parent from the HRIS org char
 - `api/openapi.yaml`
 - `docs/security/Pedigree_Security_Threat_Model.md`
 - `docs/delivery/Pedigree_90Day_Roadmap.md`
+- `docs/delivery/IMPLEMENTATION_BACKLOG.md`
 - `docs/design/pedigree_clickable_demo_and_website_design_spec.md`
 
 ## Next Build Steps
