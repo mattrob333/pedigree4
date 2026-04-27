@@ -70,3 +70,11 @@
 - Extend CI with Docker image builds once the demo stack is ready for full container build verification.
 - Add integration tests for frontend-to-backend workflows.
 - Add coverage reporting when the backend test suite grows beyond smoke tests.
+
+## 2026-04-27 Agent Handoff Update
+
+### Built
+
+- Added `CONTRIBUTING.md` with local validation commands, development priorities, architecture boundaries, and pull request expectations.
+- Added GitHub issue templates for backend tasks, frontend tasks, and docs/handoff tasks.
+- Clarified acceptance criteria and validation commands for follow-on AI agents and reviewers.
