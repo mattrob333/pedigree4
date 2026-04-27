@@ -1,0 +1,425 @@
+openapi: 3.1.0
+info:
+  title: Pedigree API
+  version: 1.0.0
+  description: |
+    The Human Org Chart for AI Agents.
+    Authoritative governance layer for enterprise AI agents.
+    Every agent is a child node under its human creator in the live HRIS org chart.
+  contact:
+    name: Pedigree Engineering
+    email: engineering@pedigree.ai
+  license:
+    name: Proprietary
+    url: https://pedigree.ai/license
+
+servers:
+  - url: https://api.pedigree.ai/v1
+    description: Production
+  - url: https://{tenant}.pedigree.ai/v1
+    description: Customer-specific tenant
+    variables:
+      tenant:
+        default: demo
+        description: Customer tenant subdomain
+
+security:
+  - EntraOIDC: []
+
+components:
+  securitySchemes:
+    EntraOIDC:
+      type: openIdConnect
+      openIdConnectUrl: https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration
+      description: Entra ID OIDC with RBAC scopes
+
+  schemas:
+    Human:
+      type: object
+      properties:
+        human_id:
+          type: string
+          format: uuid
+        tenant_id:
+          type: string
+          format: uuid
+        external_id:
+          type: string
+          description: HRIS employee ID
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        department:
+          type: string
+        job_title:
+          type: string
+        status:
+          type: string
+          enum: [active, terminated, on_leave]
+        manager_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+      required: [human_id, tenant_id, email, full_name, status]
+
+    Agent:
+      type: object
+      properties:
+        agent_id:
+          type: string
+          format: uuid
+        tenant_id:
+          type: string
+          format: uuid
+        external_id:
+          type: string
+          description: e.g. dataverse:envId:botId or Entra Agent ID
+        platform:
+          type: string
+          enum: [copilot_studio, m365_agent_builder, entra_agent_id, custom]
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [active, inactive, orphaned, pending_deprovision]
+        owner_human_id:
+          type: string
+          format: uuid
+        scope_snapshot:
+          type: object
+          additionalProperties: true
+        risk_score:
+          type: number
+          format: float
+        created_at:
+          type: string
+          format: date-time
+      required: [agent_id, tenant_id, external_id, platform, name, status, owner_human_id]
+
+    Policy:
+      type: object
+      properties:
+        policy_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum: [scope_cap, sod, lifecycle, dlp]
+        rule:
+          type: object
+          additionalProperties: true
+        enabled:
+          type: boolean
+      required: [policy_id, name, type, rule, enabled]
+
+    AuditEvent:
+      type: object
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        actor_human_id:
+          type: string
+          format: uuid
+          nullable: true
+        target_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        payload:
+          type: object
+          additionalProperties: true
+        occurred_at:
+          type: string
+          format: date-time
+      required: [event_id, event_type, occurred_at]
+
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Invalid or missing authentication
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+paths:
+  /humans:
+    get:
+      summary: List humans (from HRIS + Entra enrichment)
+      operationId: listHumans
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, terminated]
+        - name: department
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Human'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+
+  /humans/{human_id}:
+    get:
+      summary: Get human details with lineage
+      operationId: getHuman
+      parameters:
+        - name: human_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Human'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /agents:
+    get:
+      summary: List agents with filters and human lineage
+      operationId: listAgents
+      parameters:
+        - name: platform
+          in: query
+          schema:
+            type: string
+            enum: [copilot_studio, m365_agent_builder, entra_agent_id]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, orphaned]
+        - name: owner_human_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: risk_min
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Agent'
+                  total:
+                    type: integer
+
+  /agents/{agent_id}:
+    get:
+      summary: Get full agent details with ancestry and resources
+      operationId: getAgent
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /agents/{agent_id}/reassign:
+    post:
+      summary: Reassign ownership (triggers Microsoft Power Platform reassign API)
+      operationId: reassignAgent
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                new_owner_human_id:
+                  type: string
+                  format: uuid
+                reason:
+                  type: string
+                  enum: [hr_termination, manual, policy_violation]
+              required: [new_owner_human_id, reason]
+      responses:
+        '202':
+          description: Accepted - cascade job queued
+        '400':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /policies:
+    get:
+      summary: List active policies
+      operationId: listPolicies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Policy'
+
+  /runtime/evaluate:
+    post:
+      summary: Evaluate policy for an agent action (used by gateway/MCP)
+      operationId: evaluateRuntime
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                agent_external_id:
+                  type: string
+                action:
+                  type: string
+                context:
+                  type: object
+                  additionalProperties: true
+              required: [agent_external_id, action]
+      responses:
+        '200':
+          description: Decision
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  decision:
+                    type: string
+                    enum: [allow, block, escalate]
+                  reason:
+                    type: string
+                  policy_id:
+                    type: string
+                    format: uuid
+                    nullable: true
+                  human_parent:
+                    $ref: '#/components/schemas/Human'
+
+  /webhooks/hris/termination:
+    post:
+      summary: Receive HR termination event (from Workday or customer webhook)
+      operationId: hrisTerminationWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                employee_id:
+                  type: string
+                termination_date:
+                  type: string
+                  format: date-time
+                reason:
+                  type: string
+              required: [employee_id, termination_date]
+      responses:
+        '202':
+          description: Accepted - cascade job started
+
+components:
+  securitySchemes:
+    EntraOIDC:
+      type: openIdConnect
+      openIdConnectUrl: https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration
+
+security:
+  - EntraOIDC: []

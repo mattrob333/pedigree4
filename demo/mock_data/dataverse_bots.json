@@ -1,0 +1,54 @@
+[
+  {
+    "botid": "bot-fin-001",
+    "name": "Vendor Onboarding Assistant",
+    "description": "Helps Finance team onboard new vendors and check compliance",
+    "ownerid": {
+      "azureactivedirectoryobjectid": "jane-doe-entra-id",
+      "internalemailaddress": "jane.doe@contoso.com"
+    },
+    "createdby": {
+      "azureactivedirectoryobjectid": "jane-doe-entra-id"
+    },
+    "createdon": "2026-02-10T14:30:00Z",
+    "statecode": 0,
+    "statuscode": 1,
+    "knowledge_sources": ["SharePoint:Finance/Vendors", "Dataverse:contoso:vendors"],
+    "actions": ["CreateVendorRecord", "CheckVendorCompliance"],
+    "environment_id": "env-contoso-prod"
+  },
+  {
+    "botid": "bot-fin-007",
+    "name": "Payment Approval Bot",
+    "description": "Reviews and routes payment approvals for Finance",
+    "ownerid": {
+      "azureactivedirectoryobjectid": "jane-doe-entra-id"
+    },
+    "createdby": {
+      "azureactivedirectoryobjectid": "jane-doe-entra-id"
+    },
+    "createdon": "2026-01-22T09:15:00Z",
+    "statecode": 0,
+    "statuscode": 1,
+    "knowledge_sources": ["Dataverse:contoso:payments"],
+    "actions": ["ApprovePayment", "FlagSuspiciousPayment"],
+    "environment_id": "env-contoso-prod"
+  },
+  {
+    "botid": "bot-it-003",
+    "name": "IT Access Provisioner",
+    "description": "Automates user access requests for IT systems",
+    "ownerid": {
+      "azureactivedirectoryobjectid": "david-lee-entra-id"
+    },
+    "createdby": {
+      "azureactivedirectoryobjectid": "david-lee-entra-id"
+    },
+    "createdon": "2025-11-05T16:45:00Z",
+    "statecode": 1,
+    "statuscode": 2,
+    "knowledge_sources": ["SharePoint:IT/AccessRequests"],
+    "actions": ["GrantAccess", "RevokeAccess"],
+    "environment_id": "env-contoso-prod"
+  }
+]

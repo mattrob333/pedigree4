@@ -1,0 +1,57 @@
+[
+  {
+    "employee_id": "EMP001",
+    "email": "jane.doe@contoso.com",
+    "upn": "jane.doe@contoso.com",
+    "full_name": "Jane Doe",
+    "department": "Finance",
+    "job_title": "Finance Manager",
+    "manager_id": "EMP010",
+    "status": "active",
+    "entitlements": ["finance.read", "finance.write.vendors", "sharepoint.finance"]
+  },
+  {
+    "employee_id": "EMP010",
+    "email": "michael.chen@contoso.com",
+    "upn": "michael.chen@contoso.com",
+    "full_name": "Michael Chen",
+    "department": "Finance",
+    "job_title": "VP Finance",
+    "manager_id": "EMP100",
+    "status": "active",
+    "entitlements": ["finance.*", "executive.read"]
+  },
+  {
+    "employee_id": "EMP100",
+    "email": "sarah.kim@contoso.com",
+    "upn": "sarah.kim@contoso.com",
+    "full_name": "Sarah Kim",
+    "department": "Executive",
+    "job_title": "CFO",
+    "manager_id": null,
+    "status": "active",
+    "entitlements": ["*"]
+  },
+  {
+    "employee_id": "EMP045",
+    "email": "david.lee@contoso.com",
+    "upn": "david.lee@contoso.com",
+    "full_name": "David Lee",
+    "department": "IT",
+    "job_title": "Platform Engineer",
+    "manager_id": "EMP020",
+    "status": "terminated",
+    "termination_date": "2026-03-15",
+    "entitlements": ["it.admin", "dataverse.write"]
+  },
+  {
+    "employee_id": "EMP020",
+    "email": "lisa.wong@contoso.com",
+    "upn": "lisa.wong@contoso.com",
+    "full_name": "Lisa Wong",
+    "department": "IT",
+    "job_title": "IT Director",
+    "manager_id": "EMP100",
+    "status": "active"
+  }
+]

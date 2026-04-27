@@ -1,0 +1,23 @@
+[
+  {
+    "id": "sharepoint-finance-site",
+    "name": "Finance SharePoint Site",
+    "type": "sharepoint_site",
+    "owner": "finance-ops@contoso.com",
+    "sensitivity": "confidential"
+  },
+  {
+    "id": "dataverse-vendor-table",
+    "name": "Vendor Master Dataverse Table",
+    "type": "dataverse_table",
+    "owner": "finance-ops@contoso.com",
+    "sensitivity": "restricted"
+  },
+  {
+    "id": "payments-api-prod",
+    "name": "Payments Approval API",
+    "type": "api",
+    "owner": "treasury@contoso.com",
+    "sensitivity": "restricted"
+  }
+]

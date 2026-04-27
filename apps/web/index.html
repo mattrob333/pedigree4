@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pedigree — Every Agent Has a Pedigree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tokens.css">
+<style>
+  body { background: var(--off-white); color: var(--text); }
+
+  /* ============ Nav ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: saturate(140%) blur(12px);
+    background: rgba(247, 249, 252, 0.78);
+    border-bottom: 1px solid rgba(8, 17, 31, 0.06);
+  }
+  .nav-inner {
+    max-width: 1240px; margin: 0 auto; padding: 14px 32px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 17px; letter-spacing: -0.01em;
+  }
+  .logo-mark {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: var(--navy-950);
+    display: grid; place-items: center; color: white;
+    position: relative;
+  }
+  .logo-mark::before, .logo-mark::after {
+    content: ''; position: absolute; background: white; border-radius: 1px;
+  }
+  .logo-mark::before { width: 8px; height: 2px; top: 8px; }
+  .logo-mark::after {
+    width: 2px; height: 10px; top: 10px; left: 12px;
+    box-shadow: -5px 6px 0 white, 5px 6px 0 white;
+  }
+  .nav-links { display: flex; gap: 28px; margin-left: 12px; }
+  .nav-links a { font-size: 14px; color: var(--text-2); font-weight: 450; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: var(--r-md);
+    font-size: 14px; font-weight: 500; transition: all 0.15s ease;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .btn-primary { background: var(--navy-950); color: white; }
+  .btn-primary:hover { background: var(--slate-700); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-strong); }
+  .btn-ghost:hover { background: white; border-color: var(--slate-400); }
+  .btn-lg { padding: 14px 24px; font-size: 15px; }
+  .btn .arrow { transition: transform 0.15s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* ============ Hero ============ */
+  .hero {
+    max-width: 1240px; margin: 0 auto; padding: 80px 32px 40px;
+    display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--slate-500);
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+    background: white;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pedigree-blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.18); }
+  h1.hero-h {
+    font-family: var(--font-serif); font-weight: 400;
+    font-size: clamp(48px, 6vw, 84px); line-height: 0.98;
+    letter-spacing: -0.02em; margin: 22px 0 18px;
+  }
+  h1.hero-h em { font-style: italic; color: var(--lineage-violet); }
+  .hero-sub { font-size: 19px; line-height: 1.5; color: var(--text-2); max-width: 540px; margin-bottom: 32px; font-weight: 400; }
+  .hero-ctas { display: flex; gap: 12px; margin-bottom: 40px; flex-wrap: wrap; }
+  .proof-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+    padding-top: 28px; border-top: 1px solid var(--border);
+  }
+  .proof-strip > div { font-size: 12.5px; color: var(--text-2); font-weight: 450; line-height: 1.35; }
+  .proof-strip > div strong { display: block; font-weight: 600; color: var(--text); font-size: 13px; margin-bottom: 2px; }
+
+  /* Hero visual — split org chart */
+  .hero-viz { position: relative; }
+  .viz-card {
+    background: white; border-radius: 20px; border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg); padding: 22px; overflow: hidden;
+    position: relative;
+  }
+  .viz-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+  .viz-tab {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 6px 10px; border-radius: 6px; color: var(--slate-500);
+    border: 1px solid var(--border);
+  }
+  .viz-tab.active { background: var(--navy-950); color: white; border-color: var(--navy-950); }
+  .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .viz-col h4 {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--slate-500); margin: 0 0 12px; font-weight: 500;
+  }
+  .hnode {
+    background: white; border: 1px solid var(--slate-150); border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 500;
+  }
+  .hnode .avatar {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--navy-800);
+    color: white; font-size: 10px; font-weight: 600;
+    display: grid; place-items: center; font-family: var(--font-mono);
+  }
+  .hnode .meta { font-weight: 400; color: var(--text-muted); font-size: 11.5px; margin-left: auto; font-family: var(--font-mono); }
+
+  .anode {
+    border-left: 3px solid var(--risk-medium);
+    background: #FEFCF7; border-radius: 6px;
+    padding: 7px 10px 7px 10px; margin: 4px 0 4px 28px;
+    display: flex; align-items: center; gap: 8px; font-size: 12px;
+    position: relative;
+  }
+  .anode::before {
+    content: ''; position: absolute; left: -15px; top: -6px; bottom: 50%;
+    border-left: 1px solid var(--slate-200); border-bottom: 1px solid var(--slate-200);
+    width: 12px;
+  }
+  .anode .bot {
+    width: 16px; height: 16px; border-radius: 4px; background: var(--lineage-violet-soft);
+    display: grid; place-items: center;
+  }
+  .anode .bot::after { content: ''; width: 8px; height: 6px; border-radius: 2px; background: var(--lineage-violet); display: block; }
+  .anode.risk-high { border-left-color: var(--risk-high); background: #FFF7F1; }
+  .anode.risk-critical { border-left-color: var(--risk-critical); background: #FEF5F5; }
+  .anode.risk-low { border-left-color: var(--risk-low); background: #F5FCF7; }
+  .rbadge {
+    margin-left: auto; font-family: var(--font-mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+    padding: 2px 6px; border-radius: 3px;
+  }
+  .rbadge.high { background: var(--risk-high-soft); color: #9A3412; }
+  .rbadge.critical { background: var(--risk-critical-soft); color: #991B1B; }
+  .rbadge.medium { background: var(--risk-medium-soft); color: #92400E; }
+  .rbadge.low { background: var(--risk-low-soft); color: #166534; }
+
+  .alert-strip {
+    margin-top: 14px; background: var(--navy-950); color: white;
+    border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+    font-size: 13px;
+  }
+  .alert-strip .pulse {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--risk-critical);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); animation: pulse 1.8s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+
+  /* ============ Section ============ */
+  section.s { max-width: 1240px; margin: 0 auto; padding: 100px 32px; }
+  .s-head { max-width: 720px; margin-bottom: 56px; }
+  .s-kicker {
+    font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--pedigree-blue); margin-bottom: 14px; font-weight: 500;
+  }
+  h2.s-h {
+    font-family: var(--font-serif); font-weight: 400;
+    font-size: clamp(36px, 4.5vw, 56px); line-height: 1.02;
+    letter-spacing: -0.02em; margin: 0 0 16px;
+  }
+  h2.s-h em { font-style: italic; color: var(--lineage-violet); }
+  .s-sub { font-size: 17px; color: var(--text-2); line-height: 1.5; }
+
+  /* Problem cards */
+  .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .pcard {
+    background: white; border-radius: 14px; border: 1px solid var(--border);
+    padding: 28px; position: relative; overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .pcard:hover { border-color: var(--slate-300); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .pcard-num {
+    font-family: var(--font-mono); font-size: 11px; color: var(--slate-400);
+    letter-spacing: 0.08em;
+  }
+  .pcard h3 {
+    font-family: var(--font-serif); font-weight: 400; font-size: 28px;
+    margin: 16px 0 10px; letter-spacing: -0.01em; line-height: 1.1;
+  }
+  .pcard p { color: var(--text-2); font-size: 14.5px; line-height: 1.55; margin: 0; }
+
+  /* Thesis — org chart visual */
+  .thesis-card {
+    background: var(--navy-950); color: white; border-radius: 24px;
+    padding: 48px; margin-top: 32px; position: relative; overflow: hidden;
+  }
+  .thesis-card::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 600px 300px at 20% 100%, rgba(124, 58, 237, 0.18), transparent),
+      radial-gradient(ellipse 500px 250px at 85% 0%, rgba(59, 130, 246, 0.15), transparent);
+    pointer-events: none;
+  }
+  .thesis-inner { position: relative; display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; }
+  .thesis-inner h2.s-h { color: white; }
+  .thesis-bullets { margin-top: 28px; display: grid; gap: 14px; }
+  .thesis-bullets div {
+    display: flex; align-items: center; gap: 12px; font-size: 15.5px; color: rgba(255,255,255,0.82);
+  }
+  .thesis-bullets .check {
+    width: 20px; height: 20px; border-radius: 50%; background: rgba(59,130,246,0.18);
+    color: var(--pedigree-blue); display: grid; place-items: center; flex-shrink: 0;
+  }
+  .thesis-bullets .check::after { content: '✓'; font-size: 11px; font-weight: 700; }
+
+  /* How it works */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+  .steps::before {
+    content: ''; position: absolute; top: 28px; left: 8%; right: 8%;
+    height: 1px; background: linear-gradient(to right, transparent, var(--slate-200) 10%, var(--slate-200) 90%, transparent);
+    z-index: 0;
+  }
+  .step { position: relative; z-index: 1; padding: 0 12px; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: white; border: 1px solid var(--border);
+    display: grid; place-items: center; margin-bottom: 20px;
+    font-family: var(--font-serif); font-size: 26px; color: var(--text);
+  }
+  .step h4 { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+  .step p { font-size: 13.5px; color: var(--text-2); line-height: 1.5; margin: 0; }
+
+  /* Use cases */
+  .uc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .ucard {
+    background: white; border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px; transition: all 0.2s ease; position: relative;
+  }
+  .ucard:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); }
+  .ucard-tag {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--pedigree-blue); font-weight: 500; margin-bottom: 18px;
+  }
+  .ucard h3 { font-family: var(--font-serif); font-weight: 400; font-size: 26px; line-height: 1.1; margin: 0 0 12px; }
+  .ucard p { color: var(--text-2); font-size: 14.5px; line-height: 1.55; margin: 0; }
+
+  /* Product preview */
+  .preview {
+    background: white; border-radius: 20px; border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg); overflow: hidden; margin-top: 24px;
+  }
+  .preview-chrome {
+    background: var(--slate-50); padding: 10px 14px; display: flex; gap: 6px; align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .preview-chrome span { width: 10px; height: 10px; border-radius: 50%; background: var(--slate-200); }
+  .preview-chrome .url {
+    margin-left: 14px; font-family: var(--font-mono); font-size: 11.5px; color: var(--slate-500);
+    background: white; padding: 4px 12px; border-radius: 5px; border: 1px solid var(--border);
+  }
+  .preview-body { padding: 32px; background: var(--off-white); }
+  .preview-cta { text-align: center; margin-top: 28px; }
+
+  /* Comparison table */
+  .cmp {
+    background: white; border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    margin-top: 24px;
+  }
+  .cmp table { width: 100%; border-collapse: collapse; }
+  .cmp th, .cmp td { padding: 18px 24px; text-align: left; font-size: 14px; }
+  .cmp th {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--slate-500); font-weight: 500;
+    background: var(--surface-2); border-bottom: 1px solid var(--border);
+  }
+  .cmp th.pedigree, .cmp td.pedigree { background: rgba(59, 130, 246, 0.04); color: var(--pedigree-blue); font-weight: 600; }
+  .cmp th.pedigree { color: var(--pedigree-blue); }
+  .cmp tr + tr td { border-top: 1px solid var(--border); }
+  .cmp td:first-child { font-weight: 500; color: var(--text); }
+  .cmp .v-yes { color: var(--risk-low); font-weight: 600; }
+  .cmp .v-no { color: var(--slate-400); }
+  .cmp .v-partial { color: var(--risk-medium); font-weight: 500; }
+  .cmp td:not(:first-child) { text-align: center; font-family: var(--font-mono); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* FAQ */
+  .faq { max-width: 840px; margin: 0 auto; }
+  .faq-item {
+    border-bottom: 1px solid var(--border); padding: 28px 0; cursor: pointer;
+  }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    font-size: 19px; font-weight: 500; letter-spacing: -0.01em;
+  }
+  .faq-toggle {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border);
+    display: grid; place-items: center; font-size: 18px; color: var(--text-2);
+    flex-shrink: 0; transition: all 0.2s;
+  }
+  .faq-item.open .faq-toggle { background: var(--navy-950); color: white; border-color: var(--navy-950); transform: rotate(45deg); }
+  .faq-a {
+    color: var(--text-2); font-size: 15px; line-height: 1.6;
+    max-height: 0; overflow: hidden; transition: max-height 0.25s ease, margin 0.25s ease;
+  }
+  .faq-item.open .faq-a { max-height: 300px; margin-top: 14px; }
+
+  /* Assessment CTA */
+  .assess {
+    background: var(--navy-950); color: white; border-radius: 24px;
+    padding: 72px 56px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: start;
+    position: relative; overflow: hidden;
+  }
+  .assess::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 500px 300px at 100% 0%, rgba(124, 58, 237, 0.2), transparent);
+    pointer-events: none;
+  }
+  .assess h2 { font-family: var(--font-serif); font-weight: 400; font-size: 44px; line-height: 1.05; margin: 0 0 20px; letter-spacing: -0.02em; color: white; }
+  .assess p { color: rgba(255,255,255,0.78); font-size: 16px; line-height: 1.55; margin-bottom: 28px; }
+  .deliverables {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px; position: relative;
+  }
+  .deliverables h4 {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: rgba(255,255,255,0.6); margin: 0 0 18px; font-weight: 500;
+  }
+  .deliverables li {
+    list-style: none; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.88);
+  }
+  .deliverables li:first-child { border-top: none; }
+  .deliverables li::before {
+    content: ''; width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(59,130,246,0.2); position: relative; flex-shrink: 0;
+  }
+  .btn-white { background: white; color: var(--navy-950); }
+  .btn-white:hover { background: var(--off-white); }
+
+  /* Logo pills + trust row */
+  .logo-pill {
+    background: white; border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 10px; text-align: center; font-size: 12.5px; font-weight: 500;
+    color: var(--text-2); font-family: var(--font-mono); letter-spacing: 0.02em;
+  }
+  .trust-row {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px;
+  }
+  .trust-item { text-align: center; border-right: 1px solid var(--border); padding-right: 24px; }
+  .trust-item:last-child { border-right: none; padding-right: 0; }
+  .trust-item .t-num {
+    font-family: var(--font-serif); font-size: 28px; font-weight: 400;
+    letter-spacing: -0.01em; color: var(--text); margin-bottom: 6px;
+  }
+  .trust-item > div:last-child { font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border); padding: 56px 32px 40px;
+    max-width: 1240px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+  }
+  footer .ft-brand { max-width: 320px; }
+  footer .ft-brand p { font-family: var(--font-serif); font-size: 24px; font-style: italic; margin: 16px 0 0; color: var(--text-2); }
+  footer h5 { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-500); margin: 0 0 14px; font-weight: 500; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { margin-bottom: 10px; }
+  footer a { font-size: 14px; color: var(--text-2); }
+  footer a:hover { color: var(--text); }
+  .ft-bottom { max-width: 1240px; margin: 0 auto; border-top: 1px solid var(--border); padding: 20px 32px; display: flex; justify-content: space-between; font-size: 12.5px; color: var(--slate-500); }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(8, 17, 31, 0.5); backdrop-filter: blur(4px);
+    z-index: 100; display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: white; border-radius: 20px; padding: 40px; max-width: 520px; width: 100%;
+    box-shadow: var(--shadow-xl); position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 18px; right: 18px; width: 32px; height: 32px;
+    border-radius: 50%; background: var(--slate-50); display: grid; place-items: center;
+    font-size: 18px; color: var(--text-2);
+  }
+  .modal h3 { font-family: var(--font-serif); font-size: 32px; font-weight: 400; margin: 0 0 8px; letter-spacing: -0.015em; }
+  .modal p { color: var(--text-2); font-size: 14px; margin: 0 0 24px; }
+  .form-grid { display: grid; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-field label {
+    display: block; font-size: 12px; font-weight: 500; color: var(--text-2);
+    margin-bottom: 6px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; background: var(--off-white);
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    outline: none; border-color: var(--pedigree-blue); background: white;
+  }
+  .form-success { text-align: center; padding: 20px 0; }
+  .form-success .check-big {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--risk-low-soft); color: var(--risk-low);
+    display: grid; place-items: center; margin: 0 auto 20px; font-size: 24px;
+  }
+  .form-success h4 { font-family: var(--font-serif); font-size: 26px; font-weight: 400; margin: 0 0 10px; }
+
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; padding: 48px 24px; }
+    .proof-strip { grid-template-columns: repeat(2, 1fr); }
+    .problem-grid, .uc-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; gap: 24px; }
+    .steps::before { display: none; }
+    .thesis-inner { grid-template-columns: 1fr; }
+    .assess { grid-template-columns: 1fr; padding: 48px 24px; }
+    .nav-links { display: none; }
+    footer { grid-template-columns: 1fr 1fr; }
+    section.s { padding: 64px 24px; }
+  }
+
+  /* ============ Dark mode overrides ============ */
+  [data-theme="dark"] body { background: var(--bg); color: var(--text); }
+  [data-theme="dark"] .nav { background: rgba(22,21,20,0.78); border-bottom-color: var(--border); }
+  [data-theme="dark"] .logo-mark { background: var(--text); color: var(--bg); }
+  [data-theme="dark"] .logo-mark::before, [data-theme="dark"] .logo-mark::after { background: var(--bg); }
+  [data-theme="dark"] .btn-primary { background: var(--pedigree-blue); color: var(--text-inverse); }
+  [data-theme="dark"] .btn-primary:hover { background: var(--pedigree-blue-dark); }
+  [data-theme="dark"] .btn-ghost { border-color: var(--border-strong); color: var(--text); }
+  [data-theme="dark"] .btn-ghost:hover { background: var(--surface-3); border-color: var(--pedigree-blue); }
+  [data-theme="dark"] .btn-white { background: var(--surface); color: var(--text); }
+  [data-theme="dark"] .btn-white:hover { background: var(--surface-3); }
+  [data-theme="dark"] .eyebrow { background: var(--surface); border-color: var(--border); color: var(--text-2); }
+  [data-theme="dark"] .viz-card,
+  [data-theme="dark"] .pcard,
+  [data-theme="dark"] .ucard,
+  [data-theme="dark"] .preview,
+  [data-theme="dark"] .cmp,
+  [data-theme="dark"] .step-num,
+  [data-theme="dark"] .logo-pill,
+  [data-theme="dark"] .modal { background: var(--surface); border-color: var(--border); color: var(--text); }
+  [data-theme="dark"] .hnode { background: var(--surface-2); border-color: var(--border-strong); }
+  [data-theme="dark"] .hnode .avatar { background: var(--surface-3); color: var(--text); }
+  [data-theme="dark"] .hnode .meta { color: var(--text-muted); }
+  [data-theme="dark"] .anode { background: var(--surface-3); color: var(--text); border-radius: 8px; }
+  [data-theme="dark"] .anode.risk-medium { background: var(--surface-3); border-left-color: var(--risk-medium); }
+  [data-theme="dark"] .anode.risk-high { background: var(--surface-3); border-left-color: var(--risk-high); }
+  [data-theme="dark"] .anode.risk-critical { background: var(--surface-3); border-left-color: var(--risk-critical); }
+  [data-theme="dark"] .anode.risk-low { background: var(--surface-3); border-left-color: var(--risk-low); }
+  [data-theme="dark"] .anode .bot { background: rgba(183,148,246,0.25); }
+  [data-theme="dark"] .anode .bot::after { background: #B794F6; }
+  [data-theme="dark"] .rbadge.high { background: rgba(251,146,60,0.15); color: #FDBA74; }
+  [data-theme="dark"] .rbadge.critical { background: rgba(248,113,113,0.15); color: #FCA5A5; }
+  [data-theme="dark"] .rbadge.medium { background: rgba(251,191,36,0.15); color: #FCD34D; }
+  [data-theme="dark"] .rbadge.low { background: rgba(134,239,172,0.15); color: #86EFAC; }
+  [data-theme="dark"] .anode::before { border-color: var(--border); }
+  [data-theme="dark"] .viz-tab { background: var(--surface-2); border-color: var(--border); color: var(--text-2); }
+  [data-theme="dark"] .viz-tab.active { background: var(--pedigree-blue); color: var(--text-inverse); border-color: var(--pedigree-blue); }
+  [data-theme="dark"] .alert-strip { background: var(--surface-3); color: var(--text); border: 1px solid var(--border); }
+  [data-theme="dark"] .thesis-card { background: linear-gradient(180deg, #1E1D1B 0%, #141312 100%); border: 1px solid var(--border); }
+  [data-theme="dark"] .thesis-card::before { opacity: 0.4; }
+  [data-theme="dark"] .assess { background: linear-gradient(180deg, #1E1D1B 0%, #141312 100%); border: 1px solid var(--border); }
+  [data-theme="dark"] .faq-item.open .faq-toggle { background: var(--pedigree-blue); color: var(--text-inverse); border-color: var(--pedigree-blue); }
+  [data-theme="dark"] .preview-body { background: var(--bg); }
+  [data-theme="dark"] .preview-chrome { background: var(--surface-2); border-color: var(--border); }
+  [data-theme="dark"] .preview-chrome .url { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
+  [data-theme="dark"] .form-field input, [data-theme="dark"] .form-field select, [data-theme="dark"] .form-field textarea { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark"></span>
+      <span>Pedigree</span>
+    </a>
+    <div class="nav-links">
+      <a href="#product">Product</a>
+      <a href="#how">How It Works</a>
+      <a href="#use-cases">Use Cases</a>
+      <a href="#assessment">Assessment</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <button class="btn btn-ghost" onclick="openAssessModal()">Book Assessment</button>
+      <a class="btn btn-primary" href="demo.html">View Demo <span class="arrow">→</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div>
+    <span class="eyebrow"><span class="dot"></span> The org chart for your AI agent workforce</span>
+    <h1 class="hero-h">Your AI agents need <em>managers</em> too.</h1>
+    <p class="hero-sub">
+      Pedigree is the governance layer that maps every AI agent to a human owner, permission boundary,
+      app-owner approval, and HR lifecycle event. Before the auditor asks, <em>"who owns this agent?"</em>
+    </p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary btn-lg" href="demo.html">▶ Start 3-Minute Walkthrough <span class="arrow">→</span></a>
+      <button class="btn btn-ghost btn-lg" onclick="openAssessModal()">Run a Lineage Assessment</button>
+    </div>
+    <div class="proof-strip">
+      <div><strong>42 agents discovered</strong>Across 8 platforms</div>
+      <div><strong>11 orphaned</strong>No human sponsor</div>
+      <div><strong>7 high-risk</strong>Exceed parent access</div>
+      <div><strong>3 app owners</strong>Awaiting approval</div>
+      <div><strong>1 audit packet</strong>Ready to export</div>
+    </div>
+  </div>
+
+  <!-- Hero visual -->
+  <div class="hero-viz">
+    <div class="viz-card">
+      <div class="viz-tabs">
+        <span class="viz-tab">Workday org · 512 humans</span>
+        <span class="viz-tab active">+ Pedigree lineage · 42 agents</span>
+      </div>
+      <div class="viz-grid">
+        <div class="viz-col">
+          <h4>Humans — governed</h4>
+          <div class="hnode"><span class="avatar">MR</span> Marcus Reed <span class="meta">VP RevOps</span></div>
+          <div class="hnode" style="margin-left: 14px;"><span class="avatar">JS</span> Jane Smith <span class="meta">Sales Ops</span></div>
+          <div class="hnode"><span class="avatar">NB</span> Nina Brooks <span class="meta">Finance Auto</span></div>
+          <div class="hnode" style="margin-left: 14px;"><span class="avatar">AM</span> Alex Moreno <span class="meta">HR Dir.</span></div>
+        </div>
+        <div class="viz-col">
+          <h4>+ Hidden agent workforce</h4>
+          <div class="anode risk-medium"><span class="bot"></span> Renewal Email Agent <span class="rbadge medium">Med</span></div>
+          <div class="anode risk-high"><span class="bot"></span> Forecast Cleanup <span class="rbadge high">Hi</span></div>
+          <div class="anode risk-low"><span class="bot"></span> Quote Review <span class="rbadge low">Low</span></div>
+          <div class="anode risk-critical" style="margin-left: 0;"><span class="bot"></span> Invoice Match <span class="rbadge critical">Crit</span></div>
+        </div>
+      </div>
+      <div class="alert-strip">
+        <span class="pulse"></span>
+        <div>
+          <strong>11 orphaned agents</strong> · no human sponsor · 2 with Snowflake write
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem section -->
+<section class="s" id="problem">
+  <div class="s-head">
+    <div class="s-kicker">01 — The problem</div>
+    <h2 class="s-h">Your company has <em>two</em> org charts. Only one is governed.</h2>
+    <p class="s-sub">
+      Workday knows your employees. Entra knows your identities. But the agent workforce growing
+      underneath them — scattered across builder tools and notebooks — has no lineage, no sponsor,
+      and no lifecycle tied to the people who created it.
+    </p>
+  </div>
+  <div class="problem-grid">
+    <div class="pcard">
+      <div class="pcard-num">/ 01</div>
+      <h3>Hidden agent workforce</h3>
+      <p>Agents multiply across Copilot Studio, LangGraph, internal builders, MCP servers, notebooks, and SaaS automations. IAM never sees most of them.</p>
+    </div>
+    <div class="pcard">
+      <div class="pcard-num">/ 02</div>
+      <h3>No human accountability</h3>
+      <p>When an agent touches revenue or finance data, teams can't answer who owns it, who approved it, and why it was built in the first place.</p>
+    </div>
+    <div class="pcard">
+      <div class="pcard-num">/ 03</div>
+      <h3>Lifecycle gaps</h3>
+      <p>When employees leave or change roles, their agents remain active, over-permissioned, or orphaned. HR events don't cascade to the agent graph.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Thesis -->
+<section class="s" id="product">
+  <div class="s-head">
+    <div class="s-kicker">02 — The thesis</div>
+    <h2 class="s-h">Govern agents like the <em>humans</em> who created them.</h2>
+    <p class="s-sub">Pedigree inherits your human org chart and extends it with agent lineage — so every autonomous action has a human you can name.</p>
+  </div>
+  <div class="thesis-card">
+    <div class="thesis-inner">
+      <div>
+        <h2 class="s-h" style="font-size: 40px;">One graph. One owner. One lifecycle.</h2>
+        <div class="thesis-bullets">
+          <div><span class="check"></span> Every agent has a human sponsor</div>
+          <div><span class="check"></span> Every agent has a documented business purpose</div>
+          <div><span class="check"></span> Every agent has a permission boundary</div>
+          <div><span class="check"></span> Every agent has app-owner approval</div>
+          <div><span class="check"></span> Every agent has an HR-linked lifecycle</div>
+        </div>
+        <div style="margin-top: 32px;">
+          <a class="btn btn-white btn-lg" href="demo.html">See the Agent Org Chart <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <!-- Mini org chart svg -->
+      <div id="thesisChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="s" id="how">
+  <div class="s-head">
+    <div class="s-kicker">03 — How it works</div>
+    <h2 class="s-h">From agent sprawl to <em>audit-ready</em> lineage in five steps.</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4>Import humans</h4><p>Sync the org chart from HRIS, IdP, or CSV. Managers, departments, reporting lines.</p></div>
+    <div class="step"><div class="step-num">2</div><h4>Register agents</h4><p>Map agents from builder tools, MCP servers, service accounts, and manual import.</p></div>
+    <div class="step"><div class="step-num">3</div><h4>Attach lineage</h4><p>Link every agent to a creator, sponsor, technical owner, and app owner.</p></div>
+    <div class="step"><div class="step-num">4</div><h4>Evaluate risk</h4><p>Flag orphaned, over-permissioned, stale agents and missing approvals automatically.</p></div>
+    <div class="step"><div class="step-num">5</div><h4>Prove control</h4><p>Simulate HR events and export audit-ready evidence packets for security and auditors.</p></div>
+  </div>
+</section>
+
+<!-- Use cases -->
+<section class="s" id="use-cases">
+  <div class="s-head">
+    <div class="s-kicker">04 — Use cases</div>
+    <h2 class="s-h">Built for the teams getting asked, <em>"who owns this agent?"</em></h2>
+  </div>
+  <div class="uc-grid">
+    <div class="ucard">
+      <div class="ucard-tag">CISO &amp; IAM</div>
+      <h3>Stop rogue agents before they become audit findings.</h3>
+      <p>See every agent, who owns it, what it can touch, and whether it exceeds its parent's approved access — without a six-month rollout.</p>
+    </div>
+    <div class="ucard">
+      <div class="ucard-tag">App Owners</div>
+      <h3>Know every agent calling your system.</h3>
+      <p>Salesforce, ServiceNow, HR, and finance owners get a clear approval queue instead of mystery automations showing up in their logs.</p>
+    </div>
+    <div class="ucard">
+      <div class="ucard-tag">CIO &amp; AI Leaders</div>
+      <h3>Unblock agent rollout without losing control.</h3>
+      <p>Give teams a safe path to build and deploy agents while security gets the ownership evidence it needs to sign off.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Product preview -->
+<section class="s">
+  <div class="s-head">
+    <div class="s-kicker">05 — Product preview</div>
+    <h2 class="s-h">See the hidden agent workforce underneath your org chart.</h2>
+  </div>
+  <div class="preview">
+    <div class="preview-chrome">
+      <span></span><span></span><span></span>
+      <span class="url">pedigree.ai/demo/org-chart</span>
+    </div>
+    <div class="preview-body">
+      <div id="previewCanvas"></div>
+    </div>
+    <div class="preview-cta" style="padding: 0 32px 40px;">
+      <a class="btn btn-primary btn-lg" href="demo.html">Launch Interactive Demo <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison -->
+<section class="s">
+  <div class="s-head">
+    <div class="s-kicker">06 — Category</div>
+    <h2 class="s-h">Discovery tells you <em>what</em> exists. Pedigree tells you <em>who</em> owns it.</h2>
+  </div>
+  <div class="cmp">
+    <table>
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Discovery tools</th>
+          <th>IAM tools</th>
+          <th class="pedigree">Pedigree</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Agent inventory</td><td><span class="v-yes">Yes</span></td><td><span class="v-partial">Partial</span></td><td class="pedigree"><span class="v-yes">Yes</span></td></tr>
+        <tr><td>Human-lineage mapping</td><td><span class="v-partial">Partial</span></td><td><span class="v-partial">Partial</span></td><td class="pedigree"><span class="v-yes">Yes</span></td></tr>
+        <tr><td>App-owner approval queue</td><td><span class="v-no">No</span></td><td><span class="v-partial">Partial</span></td><td class="pedigree"><span class="v-yes">Yes</span></td></tr>
+        <tr><td>HR lifecycle simulation</td><td><span class="v-no">No</span></td><td><span class="v-partial">Partial</span></td><td class="pedigree"><span class="v-yes">Yes</span></td></tr>
+        <tr><td>Audit evidence packet</td><td><span class="v-partial">Partial</span></td><td><span class="v-partial">Partial</span></td><td class="pedigree"><span class="v-yes">Yes</span></td></tr>
+        <tr><td>Agent org chart UI</td><td><span class="v-no">No</span></td><td><span class="v-no">No</span></td><td class="pedigree"><span class="v-yes">Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Integrations strip -->
+<section class="s" style="padding-top: 40px; padding-bottom: 40px;">
+  <div style="text-align: center; margin-bottom: 28px;">
+    <div class="s-kicker">Works with the tools you already run</div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; max-width: 1000px; margin: 0 auto;">
+    <!-- logo pills -->
+    <div class="logo-pill">Workday</div>
+    <div class="logo-pill">Entra ID</div>
+    <div class="logo-pill">Okta</div>
+    <div class="logo-pill">Salesforce</div>
+    <div class="logo-pill">NetSuite</div>
+    <div class="logo-pill">ServiceNow</div>
+    <div class="logo-pill">Snowflake</div>
+    <div class="logo-pill">GitHub</div>
+    <div class="logo-pill">Copilot Studio</div>
+    <div class="logo-pill">LangGraph</div>
+    <div class="logo-pill">Zapier</div>
+    <div class="logo-pill">Make</div>
+  </div>
+  <div style="text-align: center; margin-top: 22px; font-size: 13px; color: var(--text-muted);">
+    Read-only ingestion. Pedigree sits <em>beside</em> Okta, Entra, Workday, and ServiceNow — never in front.
+  </div>
+</section>
+
+<!-- Trust row -->
+<section class="s" style="padding: 40px 32px;">
+  <div class="trust-row">
+    <div class="trust-item"><div class="t-num">SOC 2</div><div>Type II, Q2 2026</div></div>
+    <div class="trust-item"><div class="t-num">Read-only</div><div>by default</div></div>
+    <div class="trust-item"><div class="t-num">Self-hosted</div><div>option available</div></div>
+    <div class="trust-item"><div class="t-num">2 weeks</div><div>to first audit packet</div></div>
+    <div class="trust-item"><div class="t-num">GDPR</div><div>+ data residency</div></div>
+  </div>
+</section>
+
+<!-- Assessment -->
+<section class="s" id="assessment">
+  <div class="assess">
+    <div>
+      <div class="s-kicker" style="color: var(--pedigree-blue);">07 — Start here</div>
+      <h2>Start with an Agent Lineage Assessment.</h2>
+      <p>
+        We inventory known agents, map them to human owners, flag orphaned and over-permissioned
+        agents, simulate HR lifecycle events, and produce an audit-ready evidence packet —
+        typically within two weeks.
+      </p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-white btn-lg" onclick="openAssessModal()">Book Assessment <span class="arrow">→</span></button>
+        <a class="btn btn-ghost btn-lg" style="color: white; border-color: rgba(255,255,255,0.3);" href="demo.html">Tour the demo first</a>
+      </div>
+    </div>
+    <div class="deliverables">
+      <h4>What you get</h4>
+      <ul style="padding: 0; margin: 0;">
+        <li>Agent inventory</li>
+        <li>Human ownership map</li>
+        <li>Orphaned agent report</li>
+        <li>Over-permissioned agent report</li>
+        <li>HR event blast-radius simulation</li>
+        <li>App-owner review queue</li>
+        <li>Audit evidence packet</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="s" id="faq">
+  <div class="s-head" style="text-align: center; margin: 0 auto 56px;">
+    <div class="s-kicker">08 — Objections, handled</div>
+    <h2 class="s-h">Common questions.</h2>
+  </div>
+  <div class="faq">
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Is this replacing Entra, Okta, Workday, or ServiceNow? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">No. Pedigree sits above and between them as the lineage and evidence layer for AI agents. It connects human ownership, app-owner approvals, permission boundaries, and HR lifecycle events — it doesn't replace the systems of record.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">What about agents that need to outlive their creator? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Pedigree supports org-owned agents with explicit exception workflows, sponsor reassignment, and audit evidence. Human-parented is the default; exceptions are visible and reviewable.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Do we need runtime enforcement on day one? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">No. Most teams start with read-only lineage, risk findings, and audit evidence. Runtime enforcement becomes much easier once the ownership graph is trusted.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">What is the first step? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Run an Agent Lineage Assessment. Start with known agents, map ownership, identify risk, and build the first governance baseline. You can see the interactive demo to understand the shape of the deliverable.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="ft-brand">
+    <div class="logo"><span class="logo-mark"></span><span>Pedigree</span></div>
+    <p>Every agent has a pedigree.</p>
+  </div>
+  <div>
+    <h5>Product</h5>
+    <ul>
+      <li><a href="demo.html">Interactive demo</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#use-cases">Use cases</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>Company</h5>
+    <ul>
+      <li><a href="#assessment">Assessment</a></li>
+      <li><a href="#" onclick="openAssessModal(); return false;">Contact</a></li>
+      <li><a href="#">Security</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>Resources</h5>
+    <ul>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="demo.html">Live demo</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="ft-bottom">
+  <div>© 2026 Pedigree Security, Inc.</div>
+  <div class="font-mono">v0.9 — prototype</div>
+</div>
+
+<!-- Assessment Modal -->
+<div class="modal-backdrop" id="assessModal" onclick="if(event.target === this) closeAssessModal()">
+  <div class="modal" id="assessModalContent">
+    <button class="modal-close" onclick="closeAssessModal()">×</button>
+    <div id="modalForm">
+      <h3>Book Agent Lineage Assessment</h3>
+      <p>2-week engagement. No commitment. You get a complete agent inventory, human ownership map, risk findings, HR lifecycle simulation, and audit evidence packet — whether or not you move forward with Pedigree.</p>
+      <form class="form-grid" onsubmit="submitAssess(event)">
+        <div class="form-row">
+          <div class="form-field"><label>Name</label><input required type="text" placeholder="Full name" /></div>
+          <div class="form-field"><label>Work email</label><input required type="email" placeholder="you@company.com" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Company</label><input required type="text" placeholder="Acme Corp" /></div>
+          <div class="form-field"><label>Role</label><select>
+            <option>CISO / Security leadership</option>
+            <option>IAM team</option>
+            <option>CIO / AI platform</option>
+            <option>App owner</option>
+            <option>Other</option>
+          </select></div>
+        </div>
+        <div class="form-field"><label>Agent platforms in use</label><input type="text" placeholder="Copilot Studio, LangGraph, internal..." /></div>
+        <div class="form-field"><label>Notes (optional)</label><textarea rows="3" placeholder="Audit timeline? Specific concerns?"></textarea></div>
+        <button class="btn btn-primary btn-lg" style="width: 100%; justify-content: center;">Submit request <span class="arrow">→</span></button>
+      </form>
+    </div>
+    <div id="modalSuccess" style="display: none;" class="form-success">
+      <div class="check-big">✓</div>
+      <h4>Request captured.</h4>
+      <p>In the real product, this would route to the Pedigree team for scheduling. For this prototype, we're just showing the success state.</p>
+      <a class="btn btn-primary" href="demo.html">Tour the demo →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openAssessModal() {
+    document.getElementById('assessModal').classList.add('open');
+    document.getElementById('modalForm').style.display = 'block';
+    document.getElementById('modalSuccess').style.display = 'none';
+  }
+  function closeAssessModal() {
+    document.getElementById('assessModal').classList.remove('open');
+  }
+  function submitAssess(e) {
+    e.preventDefault();
+    document.getElementById('modalForm').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
+  }
+
+  // Thesis mini org chart SVG
+  const thesisChart = document.getElementById('thesisChart');
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const CARD_FILL = isDark ? '#2A2927' : 'white';
+  const CARD_STROKE = isDark ? '#3A3836' : '#E4E8EF';
+  const TEXT_PRI = isDark ? '#F4F2EE' : '#0B1524';
+  const TEXT_SEC = isDark ? '#9E9A92' : '#64748B';
+  const EDGE = isDark ? '#4A4846' : '#CBD5E1';
+  const AVATAR = isDark ? '#4A4846' : '#0E1B2E';
+  const ACCENT = '#3B82F6';
+  const ACCENT_SOFT = isDark ? 'rgba(59,130,246,0.22)' : 'rgba(59,130,246,0.08)';
+  const VIOLET = '#7C3AED';
+  const AGENT_FILL = isDark ? '#1F1E1D' : 'url(#aFill)';
+  const AGENT_STROKE = isDark ? '#4B3F6B' : '#C4B5FD';
+  const AGENT_TEXT = isDark ? '#E6E2DB' : '#0B1524';
+  const RED = '#EF4444';
+  const RED_SOFT = isDark ? 'rgba(239,68,68,0.12)' : '#FEE2E2';
+  const RED_STROKE = isDark ? 'rgba(239,68,68,0.4)' : '#FCA5A5';
+  const RED_TEXT = isDark ? '#FCA5A5' : '#991B1B';
+
+  thesisChart.innerHTML = `
+    <svg viewBox="0 0 520 380" width="100%" style="max-width: 540px;">
+      <defs>
+        <linearGradient id="aFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#EDE9FE"/>
+          <stop offset="100%" stop-color="#DDD6FE"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Root human -->
+      <g>
+        <rect x="210" y="20" width="100" height="46" rx="8" fill="${CARD_FILL}" stroke="${CARD_STROKE}"/>
+        <circle cx="228" cy="43" r="11" fill="${AVATAR}"/>
+        <text x="228" y="47" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="#F4F2EE" text-anchor="middle">EC</text>
+        <text x="245" y="40" font-family="Inter" font-size="11" font-weight="600" fill="${TEXT_PRI}">Evelyn C.</text>
+        <text x="245" y="53" font-family="Inter" font-size="9" fill="${TEXT_SEC}">CIO</text>
+      </g>
+
+      <!-- Lines from root to managers -->
+      <path d="M260,66 L260,96 M90,96 L430,96 M90,96 L90,116 M260,96 L260,116 M430,96 L430,116" stroke="${EDGE}" fill="none"/>
+
+      <!-- Managers: Marcus | Jane (highlighted) | Nina -->
+      <g>
+        <rect x="40" y="116" width="100" height="46" rx="8" fill="${CARD_FILL}" stroke="${CARD_STROKE}"/>
+        <circle cx="58" cy="139" r="11" fill="${AVATAR}"/>
+        <text x="58" y="143" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="#F4F2EE" text-anchor="middle">MR</text>
+        <text x="75" y="136" font-family="Inter" font-size="11" font-weight="600" fill="${TEXT_PRI}">Marcus R.</text>
+        <text x="75" y="149" font-family="Inter" font-size="9" fill="${TEXT_SEC}">VP RevOps</text>
+      </g>
+      <g>
+        <rect x="210" y="116" width="100" height="46" rx="8" fill="${CARD_FILL}" stroke="${ACCENT}" stroke-width="1.5"/>
+        <rect x="210" y="116" width="100" height="46" rx="8" fill="${ACCENT_SOFT}"/>
+        <circle cx="228" cy="139" r="11" fill="${ACCENT}"/>
+        <text x="228" y="143" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="white" text-anchor="middle">JS</text>
+        <text x="245" y="136" font-family="Inter" font-size="11" font-weight="600" fill="${TEXT_PRI}">Jane S.</text>
+        <text x="245" y="149" font-family="Inter" font-size="9" fill="${TEXT_SEC}">Sales Ops</text>
+      </g>
+      <g>
+        <rect x="380" y="116" width="100" height="46" rx="8" fill="${CARD_FILL}" stroke="${CARD_STROKE}"/>
+        <circle cx="398" cy="139" r="11" fill="${AVATAR}"/>
+        <text x="398" y="143" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="#F4F2EE" text-anchor="middle">NB</text>
+        <text x="415" y="136" font-family="Inter" font-size="11" font-weight="600" fill="${TEXT_PRI}">Nina B.</text>
+        <text x="415" y="149" font-family="Inter" font-size="9" fill="${TEXT_SEC}">Finance</text>
+      </g>
+
+      <!-- Agent edges (dashed violet) -->
+      <path d="M90,162 L90,196" stroke="${VIOLET}" stroke-opacity="0.45" stroke-dasharray="2 3" fill="none"/>
+      <path d="M260,162 L260,182 M225,182 L295,182 M225,182 L225,196 M295,182 L295,196" stroke="${VIOLET}" stroke-opacity="0.45" stroke-dasharray="2 3" fill="none"/>
+      <path d="M430,162 L430,182 M395,182 L465,182 M395,182 L395,196 M465,182 L465,196" stroke="${VIOLET}" stroke-opacity="0.45" stroke-dasharray="2 3" fill="none"/>
+
+      <!-- Agents — clustered under their manager, no overlaps -->
+      ${[
+        // Marcus: 1 agent
+        {x: 45, y: 196, label: 'Renewal', risk: '#F59E0B'},
+        // Jane: 2 agents (centered around 260)
+        {x: 180, y: 196, label: 'Forecast', risk: '#F97316'},
+        {x: 270, y: 196, label: 'Quote Rev', risk: '#22C55E'},
+        // Nina: 2 agents (centered around 430)
+        {x: 350, y: 196, label: 'Invoice Match', risk: '#EF4444'},
+        {x: 440, y: 196, label: 'Pmt Except', risk: '#F97316'},
+      ].map(a => `
+        <g>
+          <rect x="${a.x}" y="${a.y}" width="85" height="28" rx="14" fill="${AGENT_FILL}" stroke="${AGENT_STROKE}"/>
+          <rect x="${a.x}" y="${a.y}" width="3" height="28" rx="1.5" fill="${a.risk}"/>
+          <circle cx="${a.x+16}" cy="${a.y+14}" r="5" fill="${VIOLET}"/>
+          <text x="${a.x+27}" y="${a.y+18}" font-family="Inter" font-size="10" font-weight="500" fill="${AGENT_TEXT}">${a.label}</text>
+        </g>
+      `).join('')}
+
+      <!-- Orphan lane — cleaner, with single clear card -->
+      <g transform="translate(0, 270)">
+        <rect x="30" y="0" width="460" height="72" rx="12" fill="${RED_SOFT}" stroke="${RED_STROKE}" stroke-dasharray="5 4"/>
+        <text x="46" y="22" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="${RED}" letter-spacing="1.2">UNMAPPED — NO SPONSOR</text>
+        <g>
+          <rect x="46" y="32" width="170" height="28" rx="14" fill="${isDark ? 'rgba(239,68,68,0.08)' : 'white'}" stroke="${RED_STROKE}"/>
+          <rect x="46" y="32" width="3" height="28" rx="1.5" fill="${RED}"/>
+          <circle cx="62" cy="46" r="5" fill="${RED}"/>
+          <text x="73" y="50" font-family="Inter" font-size="10.5" font-weight="500" fill="${RED_TEXT}">Legacy Data Cleanup</text>
+        </g>
+        <text x="232" y="50" font-family="JetBrains Mono" font-size="9" fill="${RED}" letter-spacing="0.5">47 DAYS · SNOWFLAKE WRITE</text>
+      </g>
+    </svg>
+  `;
+
+  // Preview canvas — larger version
+  const previewCanvas = document.getElementById('previewCanvas');
+  previewCanvas.innerHTML = `
+    <div style="display: grid; grid-template-columns: 180px 1fr 240px; gap: 16px; height: 420px;">
+      <!-- left nav -->
+      <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px;">
+        <div style="font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400); margin-bottom: 10px;">Workspace</div>
+        ${['Agent Org Chart', 'Risk Findings', 'HR Simulation', 'Approvals', 'Audit Packet', 'Settings'].map((l, i) => `
+          <div style="padding: 8px 10px; border-radius: 6px; font-size: 12.5px; margin-bottom: 2px; ${i===0?'background:var(--navy-950); color:white;':''}">${l}</div>
+        `).join('')}
+      </div>
+      <!-- canvas -->
+      <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+        <div style="background: var(--navy-950); color:white; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--pedigree-blue);"></span>
+          9 agents mapped · 4 findings require review
+        </div>
+        <svg viewBox="0 0 480 300" width="100%">
+          <rect x="200" y="10" width="80" height="34" rx="6" fill="white" stroke="#E4E8EF"/>
+          <text x="240" y="25" font-family="Inter" font-size="10" font-weight="600" fill="#0B1524" text-anchor="middle">Marcus Reed</text>
+          <text x="240" y="36" font-family="Inter" font-size="8" fill="#64748B" text-anchor="middle">VP RevOps · 4 agents</text>
+
+          <path d="M240 44 L240 80 M120 80 L360 80 M120 80 L120 110 M360 80 L360 110" stroke="#CBD5E1" fill="none"/>
+
+          <rect x="70" y="110" width="100" height="36" rx="6" fill="white" stroke="#3B82F6" stroke-width="1.5"/>
+          <text x="120" y="125" font-family="Inter" font-size="10" font-weight="600" fill="#0B1524" text-anchor="middle">Jane Smith</text>
+          <text x="120" y="137" font-family="Inter" font-size="8" fill="#64748B" text-anchor="middle">Sales Ops · 3 agents</text>
+
+          <rect x="310" y="110" width="100" height="36" rx="6" fill="white" stroke="#E4E8EF"/>
+          <text x="360" y="125" font-family="Inter" font-size="10" font-weight="600" fill="#0B1524" text-anchor="middle">Omar Patel</text>
+          <text x="360" y="137" font-family="Inter" font-size="8" fill="#64748B" text-anchor="middle">SF App Owner</text>
+
+          <path d="M120 146 L120 170 M30 170 L210 170 M30 170 L30 186 M120 170 L120 186 M210 170 L210 186" stroke="#7C3AED" stroke-opacity="0.4" stroke-dasharray="2 3" fill="none"/>
+
+          ${[{x: 0, r: '#F59E0B', n: 'Renewal Email', rr: 'MED'},{x: 90, r: '#F97316', n: 'Forecast Cleanup', rr: 'HIGH'},{x: 180, r: '#22C55E', n: 'Quote Review', rr: 'LOW'}].map(a => `
+            <g transform="translate(${a.x}, 0)">
+              <rect x="0" y="186" width="120" height="28" rx="14" fill="#FAF5FF" stroke="#C4B5FD"/>
+              <rect x="0" y="186" width="3" height="28" rx="1.5" fill="${a.r}"/>
+              <circle cx="14" cy="200" r="5" fill="#7C3AED"/>
+              <text x="26" y="203" font-family="Inter" font-size="9.5" font-weight="500" fill="#0B1524">${a.n}</text>
+              <rect x="88" y="193" width="26" height="13" rx="3" fill="${a.r}22"/>
+              <text x="101" y="203" font-family="JetBrains Mono" font-size="7.5" font-weight="600" fill="${a.r}" text-anchor="middle">${a.rr}</text>
+            </g>
+          `).join('')}
+
+          <rect x="30" y="250" width="360" height="40" rx="8" fill="none" stroke="#EF4444" stroke-dasharray="4 4" opacity="0.5"/>
+          <text x="44" y="268" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="#EF4444">UNMAPPED</text>
+          <rect x="44" y="272" width="150" height="12" rx="6" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="0.5"/>
+          <text x="52" y="281" font-family="Inter" font-size="8" font-weight="500" fill="#991B1B">Legacy Data Cleanup · 47d</text>
+        </svg>
+      </div>
+      <!-- right panel -->
+      <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
+        <div style="font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400); margin-bottom: 8px;">Selected</div>
+        <div style="font-family: var(--font-serif); font-size: 20px; line-height: 1.1; margin-bottom: 4px;">Forecast Cleanup</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">LangGraph · Jane Smith</div>
+        <div style="background: #FFF7ED; border-left: 2px solid var(--risk-high); padding: 10px; font-size: 11.5px; line-height: 1.4; color: #7C2D12; margin-bottom: 14px; border-radius: 0 6px 6px 0;">Agent exceeds parent's approved Salesforce access.</div>
+        <div style="font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; color: var(--slate-400); margin-bottom: 6px;">Recommended</div>
+        <div style="background: var(--navy-950); color: white; padding: 8px 10px; border-radius: 6px; font-size: 11px; margin-bottom: 6px;">Route approval → Omar Patel</div>
+        <div style="border: 1px solid var(--border); padding: 8px 10px; border-radius: 6px; font-size: 11px;">Suspend export scope</div>
+      </div>
+    </div>
+  `;
+</script>
+</body>
+</html>
