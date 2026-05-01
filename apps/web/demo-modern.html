@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedigree — Modern Org Chart Demo</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0b0d0e;
+      color: #e8eaed;
+      overflow: hidden;
+    }
+    
+    #root {
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-size: 18px;
+      color: #9aa0a6;
+    }
+    
+    .error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 16px;
+      color: #e57373;
+    }
+    
+    .error button {
+      padding: 8px 16px;
+      background: #e57373;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .error button:hover {
+      background: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="loading">Loading Pedigree Org Chart...</div>
+  </div>
+  
+  <!-- Load the static demo data first -->
+  <script src="/js/demo-data.js"></script>
+  
+  <!-- React app -->
+  <script type="module" src="/src/demo-modern.tsx"></script>
+</body>
+</html>

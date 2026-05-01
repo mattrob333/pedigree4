@@ -30,22 +30,74 @@ const OrgChartScreen = ({ revealed, setRevealed, onSelectHuman, onSelectAgent, s
         </button>
       </div>
 
-      <div className="orgchart orgchart-flow-shell">
+      <div className="orgchart">
         <div className="org-title">Apex Industrial Group · Org Chart</div>
 
-        <OrgChartFlowMount
-          humans={humans}
-          agents={agents}
-          revealed={revealed}
-          selHuman={selHuman}
-          selAgent={selAgent}
-          suspendedAgents={suspendedAgents}
-          onSelectHuman={onSelectHuman}
-          onSelectAgent={onSelectAgent}
-        />
+        {/* CIO level */}
+        <div className="tree-level">
+          <div className="tree-branch">
+            <HumanNode human={root} selected={selHuman === root.id} onSelect={onSelectHuman} />
+          </div>
+        </div>
 
-        {/* Orphan lane (kept below the flow) */}
-        {revealed && orphans.length > 0 && (
+        <TreeSVG revealed={revealed} />
+
+        {/* VP level */}
+        <div className="tree-level" style={{marginTop: 24}}>
+          {vps.map(vp => (
+            <div key={vp.id} className="tree-branch" style={{flex: 1, maxWidth: 300}}>
+              <HumanNode human={vp} selected={selHuman === vp.id} onSelect={onSelectHuman} />
+              {/* Agents directly under VP (Priya has Expense Summarizer) */}
+              {revealed && agentsFor(vp.id).length > 0 && (
+                <div className={`agents-row ${revealed ? 'revealed' : ''}`}>
+                  {agentsFor(vp.id).map(a => (
+                    <AgentNode key={a.id} agent={a} selected={selAgent === a.id} onSelect={onSelectAgent} suspended={suspendedAgents.includes(a.id)} />
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Manager level — Jane under Marcus, Nina under Priya */}
+        <div className="tree-level" style={{marginTop: 36}}>
+          <div className="tree-branch">
+            <HumanNode human={getHuman('h5')} selected={selHuman === 'h5'} onSelect={onSelectHuman} />
+            {revealed && (
+              <div className={`agents-row revealed`}>
+                {agentsFor('h5').map(a => (
+                  <AgentNode key={a.id} agent={a} selected={selAgent === a.id} onSelect={onSelectAgent} suspended={suspendedAgents.includes(a.id)} />
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="tree-branch">
+            <HumanNode human={getHuman('h8')} selected={selHuman === 'h8'} onSelect={onSelectHuman} />
+            {revealed && (
+              <div className={`agents-row revealed`}>
+                {agentsFor('h8').map(a => (
+                  <AgentNode key={a.id} agent={a} selected={selAgent === a.id} onSelect={onSelectAgent} suspended={suspendedAgents.includes(a.id)} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* App owners row */}
+        <div className="tree-level" style={{marginTop: 36}}>
+          <HumanNode human={getHuman('h7')} selected={selHuman === 'h7'} onSelect={onSelectHuman} compact />
+          <HumanNode human={getHuman('h6')} selected={selHuman === 'h6'} onSelect={onSelectHuman} compact />
+          {revealed && (
+            <div className={`agents-row revealed`} style={{marginLeft: 0, maxWidth: 240}}>
+              {agentsFor('h6').map(a => (
+                <AgentNode key={a.id} agent={a} selected={selAgent === a.id} onSelect={onSelectAgent} suspended={suspendedAgents.includes(a.id)} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Orphan lane */}
+        {revealed && (
           <div className="orphan-lane">
             <div className="orphan-lane-head">Unmapped agents — missing human sponsor</div>
             <div style={{display: 'flex', gap: 10, flexWrap: 'wrap'}}>
@@ -61,54 +113,12 @@ const OrgChartScreen = ({ revealed, setRevealed, onSelectHuman, onSelectAgent, s
 
         {/* Callout near Jane */}
         {revealed && !selHuman && !selAgent && (
-          <div className="focus-area" style={{marginTop: 16, color: 'white', padding: '14px 18px', borderRadius: 10, fontSize: 13.5, lineHeight: 1.5, maxWidth: 520}}>
+          <div className="focus-area" style={{marginTop: 24, color: 'white', padding: '14px 18px', borderRadius: 10, fontSize: 13.5, lineHeight: 1.5, maxWidth: 520}}>
             <div style={{fontFamily: 'var(--font-mono)', fontSize: 10.5, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#93C5FD', marginBottom: 4}}>Focus area</div>
             Jane owns 3 active agents. One exceeds her Salesforce access and one requires app-owner review. <span onClick={() => onSelectHuman('h5')} style={{color: '#93C5FD', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3}}>Inspect Jane →</span>
           </div>
         )}
       </div>
-    </div>
-  );
-};
-
-// ============ React Flow mount wrapper ============
-// Bridges the Babel-React tree to the Vite-bundled OrgChartFlow widget.
-const OrgChartFlowMount = ({ humans, agents, revealed, selHuman, selAgent, suspendedAgents, onSelectHuman, onSelectAgent }) => {
-  const ref = uR(null);
-  const [ready, setReady] = uS(!!window.OrgChartFlow);
-
-  uE(() => {
-    if (window.OrgChartFlow) { setReady(true); return; }
-    const onReady = () => setReady(true);
-    window.addEventListener('orgchartflow:ready', onReady);
-    // Poll as fallback in case event fires before listener attaches
-    const t = setInterval(() => { if (window.OrgChartFlow) { setReady(true); clearInterval(t); } }, 50);
-    return () => { window.removeEventListener('orgchartflow:ready', onReady); clearInterval(t); };
-  }, []);
-
-  uE(() => {
-    if (!ready || !ref.current || !window.OrgChartFlow) return;
-    window.OrgChartFlow.update(ref.current, {
-      humans, agents, revealed, selHuman, selAgent, suspendedAgents,
-      onSelectHuman, onSelectAgent,
-    });
-  }, [ready, humans, agents, revealed, selHuman, selAgent, suspendedAgents, onSelectHuman, onSelectAgent]);
-
-  uE(() => () => {
-    if (ref.current && window.OrgChartFlow) window.OrgChartFlow.unmount(ref.current);
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className="orgchart-flow"
-      style={{width: '100%'}}
-    >
-      {!ready && (
-        <div style={{display: 'grid', placeItems: 'center', height: '100%', color: 'var(--text-muted)', fontSize: 13}}>
-          Loading interactive org chart…
-        </div>
-      )}
     </div>
   );
 };

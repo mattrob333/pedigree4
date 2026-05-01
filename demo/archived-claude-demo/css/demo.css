@@ -236,41 +236,6 @@ body { background: var(--off-white); overflow: hidden; }
   position: relative;
   min-height: calc(100vh - 240px);
 }
-.orgchart-flow-shell {
-  min-height: auto;
-  padding-bottom: 24px;
-}
-.orgchart-flow {
-  height: clamp(420px, 48vh, 560px);
-  min-height: 420px;
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--border);
-}
-.orgchart-flow .react-flow__controls {
-  box-shadow: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.orgchart-flow .react-flow__controls-button {
-  width: 24px;
-  height: 24px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  fill: var(--text);
-}
-.orgchart-flow .react-flow__controls-button:hover {
-  background: var(--surface-3);
-}
-.orgchart-flow .react-flow__controls-button svg {
-  width: 13px;
-  height: 13px;
-  fill: currentColor;
-}
 .org-title {
   font-family: var(--font-mono); font-size: 11px;
   text-transform: uppercase; letter-spacing: 0.12em; color: var(--slate-500);
@@ -368,7 +333,6 @@ body { background: var(--off-white); overflow: hidden; }
   margin-top: 36px; padding: 16px 20px;
   background: rgba(239, 68, 68, 0.02);
   border: 1px dashed rgba(239, 68, 68, 0.4); border-radius: 12px;
-  overflow: visible;
 }
 .orphan-lane-head {
   display: flex; align-items: center; gap: 10px; margin-bottom: 12px;

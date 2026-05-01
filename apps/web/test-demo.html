@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Org Chart Demo Test</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0b0d0e;
+      color: #e8eaed;
+      overflow: hidden;
+    }
+    
+    #root {
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-size: 18px;
+      color: #9aa0a6;
+    }
+    
+    .error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 16px;
+      color: #e57373;
+    }
+    
+    .error button {
+      padding: 8px 16px;
+      background: #e57373;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .error button:hover {
+      background: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="loading">Loading Org Chart Demo...</div>
+  </div>
+  
+  <!-- Load the static demo data first -->
+  <script>
+    // Inline demo data for testing
+    window.PEDIGREE_DATA = {
+      humans: [
+        { id: 'h1', name: 'Evelyn Carter', initials: 'EC', role: 'CIO', dept: 'Technology', manager: null, status: 'Active' },
+        { id: 'h2', name: 'Marcus Reed', initials: 'MR', role: 'VP, Revenue Operations', dept: 'Revenue', manager: 'h1', status: 'Active' },
+        { id: 'h3', name: 'Priya Nair', initials: 'PN', role: 'VP, Finance Systems', dept: 'Finance', manager: 'h1', status: 'Active' },
+        { id: 'h4', name: 'Alex Moreno', initials: 'AM', role: 'Director, People Operations', dept: 'HR', manager: 'h1', status: 'Active' },
+        { id: 'h5', name: 'Jane Smith', initials: 'JS', role: 'Sales Operations Manager', dept: 'Revenue', manager: 'h2', status: 'Active' },
+        { id: 'h6', name: 'Tom Yamada', initials: 'TY', role: 'Engineering Manager, Data', dept: 'Technology', manager: 'h1', status: 'Active' },
+      ],
+      agents: [
+        { id: 'a1', name: 'Renewal Email Agent', parent: 'h5', sponsor: 'h5', techOwner: 'h2', platform: 'Copilot Studio', purpose: 'Draft renewal emails using Salesforce opportunity data', apps: ['Salesforce', 'Outlook'], risk: 'medium', status: 'Active', approval: 'Salesforce app owner approved', lastActive: '2 hours ago', permissions: [{ scope: 'Salesforce: read opportunities', ok: true }, { scope: 'Salesforce: read accounts', ok: true }, { scope: 'Outlook: draft emails', ok: true }], findings: [] },
+        { id: 'a2', name: 'Forecast Cleanup Agent', parent: 'h5', sponsor: 'h5', techOwner: 'h5', platform: 'LangGraph', purpose: 'Clean pipeline stages and produce forecast notes', apps: ['Salesforce', 'Snowflake'], risk: 'high', status: 'Active', approval: 'Missing Salesforce export approval', lastActive: '18 minutes ago', permissions: [{ scope: 'Salesforce: read opportunities', ok: true }, { scope: 'Salesforce: export opportunities', ok: false, reason: 'Exceeds parent' }, { scope: 'Snowflake: read customer revenue', ok: false, reason: 'Exceeds parent' }], findings: [{ type: 'Agent exceeds parent access', severity: 'high', evidence: 'Agent can export Salesforce opportunities. Parent does not have export entitlement.', action: 'Suspend export scope or request Salesforce app-owner approval.' }, { type: 'Missing app-owner approval', severity: 'high', evidence: 'Salesforce export action requires Omar Patel approval.', action: 'Route to Omar Patel.' }], flagship: true },
+        { id: 'a3', name: 'Invoice Match Agent', parent: 'h3', sponsor: 'h3', techOwner: 'h8', platform: 'MCP Workflow', purpose: 'Match invoices to purchase orders and flag exceptions', apps: ['NetSuite', 'ServiceNow'], risk: 'critical', status: 'Active', approval: 'Finance approval present, payment action approval missing', lastActive: '6 minutes ago', permissions: [{ scope: 'NetSuite: read invoices', ok: true }, { scope: 'NetSuite: update invoice status', ok: false, reason: 'Requires dual control' }, { scope: 'ServiceNow: create ticket', ok: true }], findings: [{ type: 'High-risk finance action requires secondary approval', severity: 'critical', evidence: 'Agent updates invoice status without second approver.', action: 'Require finance approval before payment action.' }] },
+        { id: 'a4', name: 'Candidate Screen Agent', parent: 'h4', sponsor: 'h4', techOwner: null, platform: 'Copilot Studio', purpose: 'Summarize candidate profiles for recruiters', apps: ['Workday', 'Outlook'], risk: 'high', status: 'Active', approval: 'HR app owner approved', lastActive: '4 hours ago', permissions: [{ scope: 'Workday: read candidate profile', ok: true }, { scope: 'Outlook: draft recruiter summary', ok: true }], findings: [{ type: 'Uses sensitive HR data', severity: 'medium', evidence: 'Agent reads candidate PII.', action: 'Review quarterly; log summary usage.' }] },
+        { id: 'a5', name: 'Pipeline Monitor', parent: 'h6', sponsor: 'h6', techOwner: 'h6', platform: 'Internal Builder', purpose: 'Watch ETL jobs and post failures', apps: ['Snowflake', 'Slack'], risk: 'medium', status: 'Active', approval: 'Approved', lastActive: '3 minutes ago', permissions: [{ scope: 'Snowflake: read job status', ok: true }, { scope: 'Slack: post #data-alerts', ok: true }], findings: [] },
+      ]
+    };
+  </script>
+  
+  <!-- React app -->
+  <script type="module" src="/src/test-demo.tsx"></script>
+</body>
+</html>

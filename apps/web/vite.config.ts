@@ -15,6 +15,9 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('index.html', import.meta.url)),
         app: fileURLToPath(new URL('app.html', import.meta.url)),
+        'demo-modern': fileURLToPath(new URL('demo-modern.html', import.meta.url)),
+        'test-demo': fileURLToPath(new URL('test-demo.html', import.meta.url)),
+        'direct-test': fileURLToPath(new URL('direct-test.html', import.meta.url)),
       },
     },
   },
